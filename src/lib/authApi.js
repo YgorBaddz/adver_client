@@ -13,11 +13,16 @@ export async function registerUser({ username, email, password, company }) {
 }
 
 export async function loginUser({ identifier, password }) {
-  // Поиск пользователя по email или username и паролю
-  const query = encodeURIComponent(
-    `filters[$or][0][email][$eq]=${identifier}&filters[$or][1][username][$eq]=${identifier}&filters[password][$eq]=${password}`
-  );
-  const res = await fetch(`${STRAPI_URL}/api/polzovatels?${query}`);
+  const params = new URLSearchParams({
+    "filters[$or][0][email][$eq]": identifier,
+    "filters[$or][1][username][$eq]": identifier,
+  });
+  const res = await fetch(`${STRAPI_URL}/api/polzovatels?${params.toString()}`);
   const data = await res.json();
-  return data;
+  if (data.data && data.data.length > 0) {
+    // В Strapi v5 поля лежат прямо в объекте data
+    const user = data.data.find((u) => u.password === password);
+    return { data: user ? [user] : [] };
+  }
+  return { data: [] };
 }

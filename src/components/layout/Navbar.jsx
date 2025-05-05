@@ -7,26 +7,33 @@ export default function Navbar() {
   const logout = useAuthStore((s) => s.logout);
 
   return (
-    <header className="flex justify-between items-center p-4 md:p-8">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur flex justify-between items-center p-4 md:p-8 shadow">
       <Link
         href={"/"}
         className="font-bold text-xl bg-gradient-to-r from-indigo-600 to-blue-400 text-transparent bg-clip-text"
       >
         Adver
       </Link>
-      <nav className="space-x-4 hidden md:flex">
-        <a href="#" className="text-gray-700 hover:text-indigo-600">
+      <nav className="flex flex-col gap-2 md:flex-row md:gap-4 items-center">
+        <Link
+          href="/calculator"
+          className="text-gray-700 hover:text-indigo-600"
+        >
           Калькулятор
-        </a>
-        <a href="#" className="text-gray-700 hover:text-indigo-600">
-          Мои расчёты
-        </a>
+        </Link>
+        {user && (
+          <Link
+            href="/my-calculations"
+            className="text-gray-700 hover:text-indigo-600"
+          >
+            Мои расчёты
+          </Link>
+        )}
         {user ? (
-          <div className="text-indigo-600 font-semibold">
+          <div className="flex items-center gap-2 text-indigo-600 font-semibold">
             <Link href={"/dashboard"}>{user.username}</Link>
-
             <button
-              className="ml-4 text-red-500 cursor-pointer"
+              className="ml-2 text-red-500 cursor-pointer"
               onClick={logout}
             >
               Выйти
