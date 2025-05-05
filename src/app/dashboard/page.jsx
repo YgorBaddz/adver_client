@@ -50,7 +50,7 @@ export default function Dashboard() {
         </p>
         <button
           onClick={() => router.push("/my-calculations")}
-          className="mb-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold shadow-lg transition"
+          className="mb-4 cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold shadow-lg transition"
         >
           Мои расчёты
         </button>
@@ -59,7 +59,7 @@ export default function Dashboard() {
             logout();
             router.push("/");
           }}
-          className="w-full border border-indigo-600 text-indigo-600 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition"
+          className="w-full cursor-pointer border border-indigo-600 text-indigo-600 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition"
         >
           Выйти
         </button>

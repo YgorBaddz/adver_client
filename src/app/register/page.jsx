@@ -82,7 +82,7 @@ export default function Register() {
         {error && (
           <div className="text-red-500 text-center font-semibold">{error}</div>
         )}
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg">
+        <button className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg">
           Зарегистрироваться
         </button>
         <div className="text-center text-sm text-gray-500 mt-2">

@@ -1,5 +1,11 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Adver - Калькулятор стоимости рекламы",
+  description:
+    "Быстрый онлайн-калькулятор бюджета рекламной кампании. Аналитика, история, прогнозы.",
+};
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
@@ -43,7 +49,7 @@ export default function Home() {
       </section>
 
       <footer className="text-center text-gray-400 py-4 text-sm">
-        &copy; 2025 AdCalc. Все права защищены.
+        &copy; 2025 Adver. Все права защищены.
       </footer>
     </main>
   );
