@@ -19,11 +19,12 @@ export default function Login() {
     e.preventDefault();
     setError("");
     const res = await loginUser(form);
-    if (res.jwt) {
-      login(res.jwt, res.user);
+    if (res.data && res.data.length > 0) {
+      // Авторизация успешна
+      login(null, res.data[0]);
       router.push("/dashboard");
     } else {
-      setError(res.error?.message || "Неверные данные");
+      setError("Неверные данные");
     }
   };
 
@@ -36,9 +37,6 @@ export default function Login() {
         <h2 className="text-2xl font-extrabold text-center text-indigo-700 mb-2">
           Вход в аккаунт
         </h2>
-        <p className="text-center text-gray-500 mb-2">
-          Добро пожаловать! Введите данные для входа.
-        </p>
         <div>
           <input
             name="identifier"

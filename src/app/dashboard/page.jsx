@@ -22,13 +22,9 @@ export default function Dashboard() {
     async function fetchCalculationsCount() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/calculations?filters[user][id][$eq]=${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/calculations?filters[polzovatels][id][$eq]=${user.id}&populate=polzovatels`
         );
+
         const data = await res.json();
         setCalculationsCount(data.meta.pagination.total);
       } catch {

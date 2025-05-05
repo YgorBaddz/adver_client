@@ -7,7 +7,12 @@ import useAuthStore from "../../store/authStore";
 import Link from "next/link";
 
 export default function Register() {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    company: "",
+  });
   const [error, setError] = useState("");
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
@@ -19,8 +24,9 @@ export default function Register() {
     e.preventDefault();
     setError("");
     const res = await registerUser(form);
-    if (res.jwt) {
-      login(res.jwt, res.user);
+    if (res.data) {
+      // Сохраняем пользователя в стор
+      login(null, { ...form, id: res.data.id });
       router.push("/dashboard");
     } else {
       setError(res.error?.message || "Ошибка регистрации");
@@ -36,14 +42,6 @@ export default function Register() {
         <h2 className="text-2xl font-extrabold text-center text-indigo-700 mb-2">
           Регистрация
         </h2>
-        <div className="bg-indigo-50 border-l-4 border-indigo-400 p-3 rounded text-indigo-800 text-sm mb-2">
-          Зарегистрируйтесь, чтобы:
-          <ul className="list-disc ml-6 mt-1">
-            <li>Сохранять и просматривать свои расчёты</li>
-            <li>Получать аналитику и рекомендации</li>
-            <li>Экспортировать отчёты</li>
-          </ul>
-        </div>
         <div>
           <input
             name="username"
@@ -71,6 +69,14 @@ export default function Register() {
             onChange={handleChange}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             required
+          />
+        </div>
+        <div>
+          <input
+            name="company"
+            placeholder="Компания (необязательно)"
+            onChange={handleChange}
+            className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
           />
         </div>
         {error && (
