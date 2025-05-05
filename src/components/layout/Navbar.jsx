@@ -14,7 +14,7 @@ export default function Navbar() {
       >
         Adver
       </Link>
-      <nav className="space-x-4 hidden md:block">
+      <nav className="space-x-4 hidden md:flex">
         <a href="#" className="text-gray-700 hover:text-indigo-600">
           Калькулятор
         </a>
@@ -22,15 +22,16 @@ export default function Navbar() {
           Мои расчёты
         </a>
         {user ? (
-          <span className="text-indigo-600 font-semibold">
-            {user.username}
+          <div className="text-indigo-600 font-semibold">
+            <Link href={"/dashboard"}>{user.username}</Link>
+
             <button
               className="ml-4 text-red-500 cursor-pointer"
               onClick={logout}
             >
               Выйти
             </button>
-          </span>
+          </div>
         ) : (
           <Link href="/login" className="text-indigo-600 font-semibold">
             Войти
