@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
@@ -8,9 +10,12 @@ export default function Home() {
         <p className="mb-6 text-lg md:text-xl text-gray-700 max-w-xl">
           Быстро, точно и удобно рассчитайте бюджет рекламной кампании онлайн.
         </p>
-        <button className="px-8 py-3 rounded-full bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition">
+        <Link
+          href={"calculator"}
+          className="px-8 py-3 rounded-full bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition"
+        >
           Рассчитать стоимость
-        </button>
+        </Link>
       </section>
 
       <section className="py-8 px-4 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
