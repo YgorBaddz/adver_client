@@ -41,26 +41,35 @@ export default function MyCalculations() {
       ) : (
         <div className="w-full max-w-3xl grid grid-cols-1 gap-6">
           {calculations.map((calc) => (
-            <div
-              key={calc.id}
-              className="bg-white/90 rounded-xl shadow p-6 flex flex-col md:flex-row md:items-center justify-between"
-            >
-              <div>
-                <div className="font-bold text-lg text-indigo-700 mb-1">
-                  {calc.platform}
-                </div>
-                <div className="text-gray-600 text-sm mb-1">
-                  Бюджет: <span className="font-semibold">{calc.budget} ₽</span>
-                </div>
-                <div className="text-gray-400 text-xs">
-                  {new Date(calc.creation_date).toLocaleString("ru-RU")}
-                </div>
+            <div key={calc.id} className="...">
+              <div className="font-bold">
+                {calc.adType === "digital"
+                  ? calc.platform
+                  : calc.adType === "billboard"
+                  ? "Билборд"
+                  : "Листовки"}
               </div>
-              <div className="mt-4 md:mt-0 flex flex-col md:items-end">
-                <div className="text-indigo-600 font-semibold mb-2">
-                  {calc.results}
-                </div>
-              </div>
+              {calc.adType === "digital" && (
+                <>
+                  <div>Бюджет: {calc.budget} ₽</div>
+                  <div>Цель: {calc.goal}</div>
+                </>
+              )}
+              {calc.adType === "billboard" && (
+                <>
+                  <div>Город: {calc.billboardCity}</div>
+                  <div>Дней: {calc.billboardDays}</div>
+                  <div>Размер: {calc.billboardSize} м²</div>
+                </>
+              )}
+              {calc.adType === "leaflet" && (
+                <>
+                  <div>Листовок: {calc.leafletCount}</div>
+                  <div>Материал: {calc.leafletMaterialCost} ₽/1000</div>
+                  <div>Распространение: {calc.leafletDistributionCost} ₽</div>
+                </>
+              )}
+              <div className="text-indigo-600">{calc.results}</div>
             </div>
           ))}
         </div>
