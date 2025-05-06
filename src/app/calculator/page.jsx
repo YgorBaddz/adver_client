@@ -280,7 +280,7 @@ export default function Calculator() {
           </>
         )}
 
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg mt-4">
+        <button className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg mt-4">
           Рассчитать
         </button>
 
@@ -291,7 +291,7 @@ export default function Calculator() {
             {isAuthenticated && (
               <button
                 type="button"
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-lg mt-4"
+                className="w-full cursor-pointer bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold shadow-lg mt-4"
                 onClick={handleSave}
                 disabled={saveStatus === "loading"}
               >

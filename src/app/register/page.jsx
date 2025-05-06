@@ -14,6 +14,7 @@ export default function Register() {
     company: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
 
@@ -23,13 +24,19 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const res = await registerUser(form);
-    if (res.data) {
-      // Сохраняем пользователя в стор
-      login(null, { ...form, id: res.data.id });
-      router.push("/dashboard");
-    } else {
-      setError(res.error?.message || "Ошибка регистрации");
+    setLoading(true);
+    try {
+      const res = await registerUser(form);
+      if (res.data) {
+        login(null, { ...form, id: res.data.id });
+        router.push("/dashboard");
+      } else {
+        setError(res.error?.message || "Ошибка регистрации");
+      }
+    } catch {
+      setError("Ошибка сети");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,6 +54,7 @@ export default function Register() {
             name="username"
             placeholder="Имя пользователя"
             onChange={handleChange}
+            disabled={loading}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             required
           />
@@ -57,6 +65,7 @@ export default function Register() {
             type="email"
             placeholder="Email"
             onChange={handleChange}
+            disabled={loading}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             required
           />
@@ -67,6 +76,7 @@ export default function Register() {
             type="password"
             placeholder="Пароль"
             onChange={handleChange}
+            disabled={loading}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             required
           />
@@ -76,14 +86,18 @@ export default function Register() {
             name="company"
             placeholder="Компания (необязательно)"
             onChange={handleChange}
+            disabled={loading}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
           />
         </div>
         {error && (
           <div className="text-red-500 text-center font-semibold">{error}</div>
         )}
-        <button className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg">
-          Зарегистрироваться
+        <button
+          className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg disabled:opacity-60"
+          disabled={loading}
+        >
+          {loading ? "Регистрация..." : "Зарегистрироваться"}
         </button>
         <div className="text-center text-sm text-gray-500 mt-2">
           Уже есть аккаунт?{" "}

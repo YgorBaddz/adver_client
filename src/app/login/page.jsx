@@ -9,6 +9,7 @@ import Link from "next/link";
 export default function Login() {
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
 
@@ -18,13 +19,19 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const res = await loginUser(form);
-    if (res.data && res.data.length > 0) {
-      // Авторизация успешна
-      login(null, res.data[0]);
-      router.push("/dashboard");
-    } else {
-      setError("Неверные данные");
+    setLoading(true);
+    try {
+      const res = await loginUser(form);
+      if (res.data && res.data.length > 0) {
+        login(null, res.data[0]);
+        router.push("/dashboard");
+      } else {
+        setError("Неверные данные");
+      }
+    } catch {
+      setError("Ошибка сети");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,6 +49,7 @@ export default function Login() {
             name="identifier"
             placeholder="Email или имя пользователя"
             onChange={handleChange}
+            disabled={loading}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             required
           />
@@ -52,6 +60,7 @@ export default function Login() {
             type="password"
             placeholder="Пароль"
             onChange={handleChange}
+            disabled={loading}
             className="w-full p-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
             required
           />
@@ -59,8 +68,11 @@ export default function Login() {
         {error && (
           <div className="text-red-500 text-center font-semibold">{error}</div>
         )}
-        <button className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg">
-          Войти
+        <button
+          className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-lg font-semibold shadow-lg disabled:opacity-60"
+          disabled={loading}
+        >
+          {loading ? "Вход..." : "Войти"}
         </button>
         <div className="text-center text-sm text-gray-500 mt-2">
           Нет аккаунта?{" "}
