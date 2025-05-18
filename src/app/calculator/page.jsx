@@ -3,6 +3,8 @@
 import { useState } from "react";
 import useAuthStore from "../../store/authStore";
 import { createCalculation } from "../../lib/calcApi";
+import { getCalculationDetails } from "@/components/funcs/getCalculationDetails";
+import CalculationDetails from "@/components/CalculationDetails";
 
 const adTypes = [
   { value: "digital", label: "Онлайн реклама" },
@@ -44,6 +46,7 @@ export default function Calculator() {
   const handleCalculate = (e) => {
     e.preventDefault();
     let summary = "";
+    const details = getCalculationDetails(form); // Получаем полные детали
 
     if (form.adType === "digital") {
       const cpc =
@@ -69,7 +72,10 @@ export default function Calculator() {
       summary = `Стоимость листовок: ${cost.toLocaleString()} ₽ за ${count} шт`;
     }
 
-    setResult({ summary });
+    setResult({
+      summary: details.explanation,
+      details, // Сохраняем детали для отображения
+    });
     setSaveStatus("");
   };
 
@@ -81,6 +87,8 @@ export default function Calculator() {
       val === "" || val === undefined ? null : Number(val);
 
     try {
+      const details = getCalculationDetails(form); // Получаем подробности расчёта
+
       const response = await createCalculation({
         polzovatelId: user.id,
         data: {
@@ -89,18 +97,20 @@ export default function Calculator() {
           budget: safeNumber(form.budget),
           goal: form.goal,
           geo: form.geo,
-          keywords: safeNumber(form.keywords), // исправлено!
-          duration: safeNumber(form.duration), // исправлено!
+          keywords: safeNumber(form.keywords),
+          duration: safeNumber(form.duration),
           billboardDays: safeNumber(form.billboardDays),
           billboardCity: form.billboardCity,
           billboardSize: safeNumber(form.billboardSize),
           leafletCount: safeNumber(form.leafletCount),
           leafletMaterialCost: safeNumber(form.leafletMaterialCost),
           leafletDistributionCost: safeNumber(form.leafletDistributionCost),
-          results: result.summary,
+          results: details.explanation, // краткий итог
+          calculation_details: JSON.stringify(details), // подробности в JSON-строке
           creation_date: new Date().toISOString(),
         },
       });
+
       if (response.data) {
         setSaveStatus("success");
       } else {
@@ -288,6 +298,13 @@ export default function Calculator() {
           <div className="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded text-indigo-800 text-center mt-4">
             <div className="font-semibold mb-2">Результаты:</div>
             <div>{result.summary}</div>
+
+            {result.details && (
+              <div className="mt-4">
+                <CalculationDetails details={result.details} />
+              </div>
+            )}
+
             {isAuthenticated && (
               <button
                 type="button"

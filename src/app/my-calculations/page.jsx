@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { FaBullhorn, FaChartBar, FaFileAlt } from "react-icons/fa";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { GiNewspaper } from "react-icons/gi";
+import CalculationDetails from "@/components/CalculationDetails";
 
 function AdTypeIcon({ type }) {
   if (type === "digital") return <FaChartBar className="text-blue-500" />;
@@ -52,64 +53,71 @@ export default function MyCalculations() {
       {loading ? (
         <div className="text-gray-500">Загрузка...</div>
       ) : calculations.length === 0 ? (
-        <div className="bg-white/80 p-8 rounded-xl shadow text-center text-gray-500">
+        <div className="bg-white/80 p-8 rounded-xl shadow text-center text-gray-500 max-w-xl w-full">
           У вас пока нет сохранённых расчётов.
         </div>
       ) : (
-        <div className="w-full max-w-3xl grid grid-cols-1 gap-6">
+        <div className="w-full max-w-4xl grid gap-6">
           {calculations.map((calc) => (
             <div
               key={calc.id}
-              className="bg-white/95 rounded-2xl shadow-lg flex flex-col md:flex-row md:items-center justify-between p-6 border-l-4
-                border-indigo-300 hover:border-indigo-500 transition group gap-4"
+              className="bg-white/95 rounded-2xl shadow-lg p-6 border-l-4 border-indigo-300 hover:border-indigo-500 transition group"
             >
-              <div className="flex items-center gap-4 mb-4 md:mb-0">
-                <div className="p-3 rounded-full bg-indigo-50 group-hover:bg-indigo-100 transition">
-                  <AdTypeIcon type={calc.adType} />
-                </div>
-                <div>
-                  <div className="font-bold text-lg text-indigo-700 flex items-center gap-2">
-                    <AdTypeLabel type={calc.adType} />
-                    <span className="text-xs text-gray-400">
-                      {new Date(calc.creation_date).toLocaleDateString("ru-RU")}
-                    </span>
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                {/* Левая часть: иконка и базовая инфо */}
+                <div className="flex items-center gap-4 min-w-[200px]">
+                  <div className="p-3 rounded-full bg-indigo-50 group-hover:bg-indigo-100 transition flex-shrink-0">
+                    <AdTypeIcon type={calc.adType} />
                   </div>
-                  {calc.adType === "digital" && (
-                    <div className="text-gray-600 text-sm">
-                      Платформа:{" "}
-                      <span className="font-semibold">{calc.platform}</span>
+                  <div className="flex flex-col">
+                    <div className="font-bold text-indigo-700 flex items-center gap-2 flex-wrap">
+                      <AdTypeLabel type={calc.adType} />
+                      <span className="text-xs text-gray-400 whitespace-nowrap">
+                        {new Date(calc.creation_date).toLocaleDateString(
+                          "ru-RU"
+                        )}
+                      </span>
                     </div>
-                  )}
-                  {calc.adType === "billboard" && (
-                    <div className="text-gray-600 text-sm flex items-center gap-1">
-                      <MdOutlineLocationOn className="inline-block" />
-                      <span>{calc.billboardCity}</span>
-                    </div>
-                  )}
+                    {calc.adType === "digital" && (
+                      <div className="text-gray-600 text-sm truncate max-w-xs">
+                        Платформа:{" "}
+                        <span className="font-semibold">{calc.platform}</span>
+                      </div>
+                    )}
+                    {calc.adType === "billboard" && (
+                      <div className="text-gray-600 text-sm flex items-center gap-1 truncate max-w-xs">
+                        <MdOutlineLocationOn className="inline-block" />
+                        <span>{calc.billboardCity}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
+
+                {/* Средняя часть: параметры */}
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600 text-sm">
                   {calc.adType === "digital" && (
                     <>
-                      <div className="text-gray-500 text-sm">
+                      <div>
                         Бюджет:{" "}
                         <span className="font-semibold">{calc.budget} ₽</span>
                       </div>
-                      <div className="text-gray-500 text-sm">
-                        Цель: <span className="font-semibold">{calc.goal}</span>
+                      <div>
+                        Цель:{" "}
+                        <span className="font-semibold">
+                          {calc.goal || "-"}
+                        </span>
                       </div>
                     </>
                   )}
                   {calc.adType === "billboard" && (
                     <>
-                      <div className="text-gray-500 text-sm">
+                      <div>
                         Дней:{" "}
                         <span className="font-semibold">
                           {calc.billboardDays}
                         </span>
                       </div>
-                      <div className="text-gray-500 text-sm">
+                      <div>
                         Размер:{" "}
                         <span className="font-semibold">
                           {calc.billboardSize} м²
@@ -119,19 +127,19 @@ export default function MyCalculations() {
                   )}
                   {calc.adType === "leaflet" && (
                     <>
-                      <div className="text-gray-500 text-sm">
+                      <div>
                         Листовок:{" "}
                         <span className="font-semibold">
                           {calc.leafletCount}
                         </span>
                       </div>
-                      <div className="text-gray-500 text-sm">
+                      <div>
                         Материал:{" "}
                         <span className="font-semibold">
                           {calc.leafletMaterialCost} ₽/1000
                         </span>
                       </div>
-                      <div className="text-gray-500 text-sm">
+                      <div>
                         Распространение:{" "}
                         <span className="font-semibold">
                           {calc.leafletDistributionCost} ₽
@@ -140,9 +148,16 @@ export default function MyCalculations() {
                     </>
                   )}
                 </div>
-                <div className="text-indigo-600 font-semibold text-center md:text-right">
+
+                {/* Правая часть: итог */}
+                <div className="text-indigo-600 font-semibold text-center md:text-right min-w-[180px] break-words">
                   {calc.results}
                 </div>
+              </div>
+
+              {/* Детали расчёта */}
+              <div className="mt-4 border-t border-indigo-200 pt-4">
+                <CalculationDetails details={calc.calculation_details} />
               </div>
             </div>
           ))}
